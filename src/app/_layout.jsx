@@ -1,10 +1,19 @@
-import { Stack } from "expo-router";
+import { Stack } from 'expo-router';
 
-
-export function RootLayout() {
-    return (
-        <Stack>
-            <Stack.Screen name="index" options={{ title: 'ReelTube' }} />
-        </Stack>
+export default function RootLayout() {
+    return (<Stack screenOptions={{
+        headerStyle: {
+            // backgroundColor: '#fff',
+            backgroundColor: 'rgb(129, 17, 18)',
+        },
+        // headerTintColor:  'rgb(129, 17, 18)',
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold',
+        },
+    }}>
+        <Stack.Screen name='index' options={{ title: 'ReelTube' }} />
+    </Stack>
     )
 }
+
