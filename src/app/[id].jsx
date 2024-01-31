@@ -1,12 +1,12 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { getVideos } from "../service/youtubeVideos";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 export default function VideoDetailsScreen() {
     const params = useLocalSearchParams()
-    const [video, setVideo] = useState([])
+    const [video, setVideo] = useState({})
     const { searchKey, id } = params
 
     useEffect(() => {
@@ -21,13 +21,14 @@ export default function VideoDetailsScreen() {
 
     return (
         <View style={styles.container}>
-            {video && (
+            <Stack.Screen options={{ title: video.name }} />
+            {Object.keys(video).length === 0 ? (
+                <View style={styles.activityIndicator}>
+                    <ActivityIndicator size="large" color="#FF0000" />
+                </View>
+            ) : (
                 <View>
-                    <Stack.Screen options={{ title: video?.name }} />
-                    <YoutubePlayer
-                        height={250}
-                        videoId={id}
-                    />
+                    <YoutubePlayer height={250} videoId={id} />
                     <Text style={[styles.txt, { fontWeight: '700' }]}>{video.name}</Text>
                     <Text style={styles.txt}>{video.desc}</Text>
                 </View>
@@ -46,5 +47,9 @@ const styles = StyleSheet.create({
         lineHeight: 20,
         marginVertical: 10,
         color: '#ffff'
-    }
+    },
+    activityIndicator: {
+        marginTop: '50%',
+
+    },
 })

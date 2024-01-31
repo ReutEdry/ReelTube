@@ -1,6 +1,6 @@
 import { getVideos } from '../service/youtubeVideos';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback, FlatList, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import VideoList from '../components/VideoList';
 
@@ -8,12 +8,18 @@ export default function ReelTubeScreen() {
     const [videosToDisplay, setVideosToDisaply] = useState([])
     const [search, setSearch] = useState('')
     const [searchKey, setSearchkey] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [isFound, setIsFound] = useState(true)
 
     async function onHandelSearch() {
         Keyboard.dismiss()
+        setIsLoading(true)
         const videos = await getVideos(search)
+        if (!videos.videos || !videos?.videos.length) setIsFound(false)
         setSearchkey(videos.searchKey)
         setVideosToDisaply((videos.videos))
+        setIsLoading(false)
+
     }
 
     return (
@@ -35,7 +41,9 @@ export default function ReelTubeScreen() {
                         </View>
                     </TouchableOpacity >
                 </View>
-                {videosToDisplay?.length ? (
+                {isLoading ? (
+                    <ActivityIndicator size="large" color="#FF0000" />
+                ) : videosToDisplay?.length ? (
                     <FlatList
                         data={videosToDisplay}
                         contentContainerStyle={{ gap: 5 }}
@@ -45,7 +53,9 @@ export default function ReelTubeScreen() {
                         showsVerticalScrollIndicator={false}
                     />
                 ) : (
-                    <Text style={styles.content}>Welcome to ReelTube. Start searching for a video!</Text>
+                    <Text style={styles.content}>
+                        {!isFound ? 'Could not find any video please try again' : 'Welcome to ReelTube. Start searching for a video!'}
+                    </Text>
                 )}
             </View>
         </TouchableWithoutFeedback>

@@ -6,8 +6,8 @@ const STORAGE_KEY = 'videosDB'
 
 export async function getVideos(searchKey) {
     if (!searchKey) return []
-
-    // in this part I was trying to keep 
+    // In this part, I standardize the search key by removing spaces and converting it to lowercase.This cache mechanism checks if the user has previously searched for the same query. If cached videos exist, I fetch the video data based on the search query from the cache instead of making another API request.
+    searchKey = searchKey.replace(/\s/g, '').toLowerCase()
     const exisitngVideos = await storageService.get(STORAGE_KEY, searchKey)
     if (exisitngVideos.videos && exisitngVideos.videos.length) return exisitngVideos
     const youTubeUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&videoEmbeddable=true&type=video&key=${YOUTUBE_API}&q=${searchKey}`;
