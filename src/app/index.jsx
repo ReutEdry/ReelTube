@@ -1,27 +1,20 @@
-import { getVideos } from '../service/youtubeVideos';
+// import { getVideos } from '../service/youtubeVideos';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
+import VideoList from '../components/VideoList';
 
 export default function Index() {
-
     const [videosToDisplay, setVideosToDisaply] = useState([])
     const [search, setSearch] = useState('')
-    // const data = await getVideos()
-    // console.log(data);
 
-    // async function getVideos() {
-
-    // }
-
-
-    function onHandelSearch() {
+    async function onHandelSearch() {
         Keyboard.dismiss()
-        console.log(search);
+        // const videos = await getVideos(search)
+        setVideosToDisaply(videos)
     }
 
-    console.log('search:', search);
-
+    console.log('videosToDisplay', videosToDisplay);
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} accessible={false}>
             <View style={[styles.container, !videosToDisplay.length && { justifyContent: 'center' }]}>
@@ -41,8 +34,19 @@ export default function Index() {
                         </View>
                     </TouchableOpacity >
                 </View>
-                {!videosToDisplay?.length && <Text style={styles.content}>Welcome to ReelTube
-                    for start search for a video</Text>}
+                {videosToDisplay.length ? (
+                    <FlatList
+                        data={videosToDisplay}
+                        contentContainerStyle={{ gap: 5 }}
+                        style={{ padding: 10 }}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => <VideoList item={item} />}
+                        contentInsetAdjustmentBehavior="automatic"
+                        showsVerticalScrollIndicator={false}
+                    />
+                ) : (
+                    <Text style={styles.content}>Welcome to ReelTube. Start searching for a video!</Text>
+                )}
             </View>
         </TouchableWithoutFeedback>
     );
