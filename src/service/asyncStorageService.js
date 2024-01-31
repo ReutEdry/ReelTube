@@ -67,7 +67,6 @@ async function loadFromStorage(key) {
     }
 }
 
-
 async function _save(entityType, entities) {
     try {
         const json = JSON.stringify(entities);
@@ -77,7 +76,6 @@ async function _save(entityType, entities) {
         throw error;
     }
 }
-
 
 function _makeId(length = 5) {
     var text = ''

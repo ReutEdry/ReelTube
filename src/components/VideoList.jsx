@@ -1,46 +1,52 @@
+import { Link } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function VideoList({ item }) {
-    return (
-        // <Link href={`/${item.name}`} asChild>
-        <Pressable >
-            <View style={styles.listContainer}>
-                <View>
-                    <Image source={{ uri: item.img }} style={styles.image} />
-                </View>
-                <View style={styles.playContent}>
-                    <Text style={styles.content}>Press to play
-                    </Text>
-                    <Image source={require('../../assets/YouTubePlayer.png')} style={styles.playerImage} />
-                </View>
-                <Text style={styles.content}>{item.name}</Text>
-            </View>
+export default function VideoList({ item, searchKey }) {
+    const { img, name, id } = item
 
-        </Pressable>
-        // </Link>
-    );
+    return (
+        <Link href={{
+            pathname: `/${id}`,
+            params: { searchKey: searchKey },
+        }} asChild >
+            <Pressable >
+                <View style={styles.listContainer}>
+                    <Image source={{ uri: img }} style={styles.videoImage} />
+                    <Image source={require('../../assets/YouTubePlayer.png')} style={styles.playerImage} />
+                    <Text style={styles.content}>{name}</Text>
+                </View>
+            </Pressable>
+        </Link >
+    )
 }
 
 const styles = StyleSheet.create({
     listContainer: {
         gap: 10,
-        // flexDirection: 'row',
         alignItems: 'center',
-        borderColor: 'black'
+        justifyContent: 'center',
+        borderColor: 'black',
+        width: 'auto',
+        marginBottom: 15,
+
     },
     content: {
         color: '#ffff',
         lineHeight: 20,
-        fontWeight: 'bold',
+        fontWeight: '600',
         textAlign: 'center',
     },
-    image: {
-        width: 200,
-        height: 120
+    videoImage: {
+        width: '100%',
+        height: 200,
+        resizeMode: 'cover',
+        position: 'relative'
     },
     playerImage: {
-        width: 50,
-        height: 50,
+        width: 80,
+        height: 80,
+        position: 'absolute',
+        bottom: 100
     },
     playContent: {
         alignItems: 'center',

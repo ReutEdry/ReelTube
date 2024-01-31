@@ -1,23 +1,24 @@
-// import { getVideos } from '../service/youtubeVideos';
+import { getVideos } from '../service/youtubeVideos';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Keyboard, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import VideoList from '../components/VideoList';
 
-export default function Index() {
+export default function ReelTubeScreen() {
     const [videosToDisplay, setVideosToDisaply] = useState([])
     const [search, setSearch] = useState('')
+    const [searchKey, setSearchkey] = useState('')
 
     async function onHandelSearch() {
         Keyboard.dismiss()
-        // const videos = await getVideos(search)
-        setVideosToDisaply(videos)
+        const videos = await getVideos(search)
+        setSearchkey(videos.searchKey)
+        setVideosToDisaply((videos.videos))
     }
 
-    console.log('videosToDisplay', videosToDisplay);
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()} accessible={false}>
-            <View style={[styles.container, !videosToDisplay.length && { justifyContent: 'center' }]}>
+            <View style={[styles.container, !videosToDisplay?.length && { justifyContent: 'center' }]}>
                 <View style={styles.search}>
                     <TextInput
                         style={styles.input}
@@ -34,13 +35,12 @@ export default function Index() {
                         </View>
                     </TouchableOpacity >
                 </View>
-                {videosToDisplay.length ? (
+                {videosToDisplay?.length ? (
                     <FlatList
                         data={videosToDisplay}
                         contentContainerStyle={{ gap: 5 }}
-                        style={{ padding: 10 }}
                         keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => <VideoList item={item} />}
+                        renderItem={({ item }) => <VideoList item={item} searchKey={searchKey} />}
                         contentInsetAdjustmentBehavior="automatic"
                         showsVerticalScrollIndicator={false}
                     />
@@ -96,5 +96,5 @@ const styles = StyleSheet.create({
     searchIcon: {
         height: 23,
         width: 23,
-    }
+    },
 });
